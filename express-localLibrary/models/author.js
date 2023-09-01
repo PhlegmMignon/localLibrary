@@ -47,8 +47,7 @@ AuthorSchema.virtual("lifespan").get(function () {
     ? DateTime.fromJSDate(this.date_of_death).toLocaleString(DateTime.DATE_MED)
     : "";
 
-  let lifespan = DoB + " - " + DoD;
-  return lifespan;
+  return DoB + " - " + DoD;
 });
 
 module.exports = mongoose.model("Author", AuthorSchema);
