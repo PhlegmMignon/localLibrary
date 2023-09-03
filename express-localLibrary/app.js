@@ -7,14 +7,36 @@ var logger = require("morgan");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 const catalogRouter = require("./routes/catalog");
+const compression = require("compression");
+const helmet = require("helmet");
 
 var app = express();
+
+app.use(compression());
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      "script-src": ["'self'", "code.jquery.com", "cdn.jsdelivr.net"],
+    },
+  })
+);
+
+const RateLimit = require("express-rate-limit");
+const limiter = RateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 20,
+});
+app.use(limiter);
 
 const mongoose = require("mongoose");
 const { log } = require("console");
 mongoose.set("strictQuery", false);
-const mongoDB =
+const dev_db_url =
   "mongodb+srv://dmah:assdfg12S@cluster0.zyotdag.mongodb.net/?retryWrites=true&w=majority";
+const mongoDB = process.env.MONGODB_URI || dev_db_url;
+
+// const mongoDB =
+// "mongodb+srv://dmah:assdfg12S@cluster0.zyotdag.mongodb.net/?retryWrites=true&w=majority";
 
 //Connects to mongoDB
 // const mongoDB = "mongodb://73.48.170.77/32 /localLibrary";

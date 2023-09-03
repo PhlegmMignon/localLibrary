@@ -2,6 +2,7 @@ const Author = require("../models/author");
 const asyncHandler = require("express-async-handler");
 const Book = require("../models/book");
 const { body, validationResult } = require("express-validator");
+const debug = require("debug")("author");
 
 // Display list of all Authors.
 exports.author_list = asyncHandler(async (req, res, next) => {
@@ -145,6 +146,7 @@ exports.author_update_get = asyncHandler(async (req, res, next) => {
   const author = await Author.findById(req.params.id).exec();
 
   if (author == null) {
+    debug(`id not found on update: ${req.params.id}`);
     const err = new Error("Author not found");
     err.status = 404;
     return next(err);
